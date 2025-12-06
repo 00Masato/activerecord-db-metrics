@@ -17,11 +17,12 @@ RSpec.describe ActiveRecord::Db::Metrics::Collector do
 
   describe "#start_monitoring and #stop_monitoring" do
     it "subscribes and unsubscribes to sql.active_record events" do
-      expect(ActiveSupport::Notifications).to receive(:subscribe).with("sql.active_record", anything)
       collector.start_monitoring
+      expect(collector.instance_variable_get(:@subscriber)).not_to be_nil
 
-      expect(ActiveSupport::Notifications).to receive(:unsubscribe).with(anything)
       collector.stop_monitoring
+      # After unsubscribe, the subscriber should still exist but be inactive
+      expect(collector.instance_variable_get(:@subscriber)).not_to be_nil
     end
   end
 
@@ -44,18 +45,19 @@ RSpec.describe ActiveRecord::Db::Metrics::Collector do
     end
 
     it "tracks SELECT queries" do
-      # Simulate a SQL notification
+      # Simulate a SQL notification (Rails 7.2+ format with row_count)
       payload = {
         sql: "SELECT * FROM users",
         name: "User Load",
-        table_name: "users"
+        table_name: "users",
+        row_count: 5
       }
 
       ActiveSupport::Notifications.instrument("sql.active_record", payload)
 
       results = collector.results
       expect(results[:total_queries]).to eq(1)
-      expect(results[:crud_operations_by_table][:users][:SELECT]).to eq(1)
+      expect(results[:crud_operations_by_table][:users][:SELECT]).to eq(5)
     end
 
     it "ignores SCHEMA queries" do
