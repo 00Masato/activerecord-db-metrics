@@ -57,35 +57,11 @@ module ActiveRecord
           end
         end
 
-        # Extract actual row count from payload or SQL
-        # Rails 7.1+ provides payload[:row_count], otherwise infer from SQL
-        def extract_row_count(payload, operation)
-          # Rails 7.1+ provides row_count directly
-          return payload[:row_count] if payload.key?(:row_count) && payload[:row_count]&.positive?
-
-          # Fallback: infer from SQL
-          case operation
-          when "INSERT"
-            # For bulk INSERT (insert_all), count VALUES clauses
-            count_insert_values(payload[:sql])
-          else
-            # SELECT, UPDATE, DELETE: cannot determine exact row count from SQL alone
-            # Would need to inspect connection.execute result for accuracy
-            1
-          end
-        end
-
-        # Count the number of rows being inserted by counting VALUES clauses
-        def count_insert_values(sql)
-          # Pattern: INSERT INTO table VALUES (...), (...), (...)
-          match = sql.match(/VALUES\s*(\(.+\))/im)
-          if match && match[1]
-            values_part = match[1]
-            # Count non-nested parentheses pairs
-            values_part.scan(/\([^)]*\)/).count
-          else
-            1
-          end
+        # Extract actual row count from payload
+        # Rails 7.2+ provides payload[:row_count] for all queries
+        # See: https://github.com/rails/rails/pull/50887
+        def extract_row_count(payload, _operation)
+          payload[:row_count] || 0
         end
 
         # Extract table name from SQL as fallback when payload[:table_name] is unavailable

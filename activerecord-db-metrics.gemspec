@@ -23,8 +23,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Dependencies
-  spec.add_dependency "activerecord", ">= 6.0"
-  spec.add_dependency "activesupport", ">= 6.0"
+  # Requires Rails 7.2+ for sql.active_record payload[:row_count] support
+  spec.add_dependency "activerecord", ">= 7.2"
+  spec.add_dependency "activesupport", ">= 7.2"
 
   # Development dependencies
   spec.add_development_dependency "rake", "~> 13.0"
