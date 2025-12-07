@@ -133,11 +133,11 @@ User.insert_all([{name: "A"}, {name: "B"}, {name: "C"}])
 
 ## Requirements
 
-- Ruby >= 2.7.0
+- Ruby >= 3.4.0
 - Rails >= 7.2
 - ActiveRecord >= 7.2
 
-This gem requires Rails 7.2+ to utilize the `row_count` field in `sql.active_record` notifications ([PR #50887](https://github.com/rails/rails/pull/50887)).
+This gem requires Rails 7.2+ to utilize the `row_count` and `affected_rows` fields in `sql.active_record` notifications ([PR #50887](https://github.com/rails/rails/pull/50887)).
 
 ## Development
 
