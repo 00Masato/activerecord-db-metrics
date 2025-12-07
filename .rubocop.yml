@@ -1,0 +1,35 @@
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+  TargetRubyVersion: 3.4
+
+# Exclude generated and vendor files
+  Exclude:
+    - 'vendor/**/*'
+    - 'bin/**/*'
+
+# Allow longer lines in gemspec
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - 'activerecord-db-metrics.gemspec'
+
+# Allow longer blocks in specs
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+# File naming - allow hyphenated gem entry point
+Naming/FileName:
+  Exclude:
+    - 'lib/activerecord-db-metrics.rb'
+
+# Allow slightly higher complexity for database parsing logic
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/MethodLength:
+  Max: 15
+
+Metrics/AbcSize:
+  Max: 20
