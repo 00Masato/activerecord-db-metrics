@@ -16,7 +16,7 @@ module ActiveRecord
 
         # Subscribe to ActiveRecord SQL notifications
         def start_monitoring
-          @subscriber = ActiveSupport::Notifications.subscribe("sql.active_record", log_subscriber)
+          @subscriber = ActiveSupport::Notifications.subscribe('sql.active_record', log_subscriber)
         end
 
         # Unsubscribe from ActiveRecord SQL notifications
@@ -37,7 +37,7 @@ module ActiveRecord
 
         def log_subscriber
           lambda do |_name, _start, _finish, _id, payload|
-            next unless payload[:sql] && payload[:name] != "SCHEMA"
+            next unless payload[:sql] && payload[:name] != 'SCHEMA'
 
             @query_count += 1
 
@@ -69,19 +69,19 @@ module ActiveRecord
           sql_downcase = sql.downcase
 
           case operation
-          when "SELECT"
+          when 'SELECT'
             # Pattern: SELECT "users".* FROM "users"
             match = sql_downcase.match(/from\s+["`]?(\w+)["`]?/)
             match[1] if match
-          when "INSERT"
+          when 'INSERT'
             # Pattern: INSERT INTO "users"
             match = sql_downcase.match(/insert\s+into\s+["`]?(\w+)["`]?/)
             match[1] if match
-          when "UPDATE"
+          when 'UPDATE'
             # Pattern: UPDATE "users" SET
             match = sql_downcase.match(/update\s+["`]?(\w+)["`]?\s+set/)
             match[1] if match
-          when "DELETE"
+          when 'DELETE'
             # Pattern: DELETE FROM "users"
             match = sql_downcase.match(/delete\s+from\s+["`]?(\w+)["`]?/)
             match[1] if match

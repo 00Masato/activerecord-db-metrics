@@ -35,19 +35,19 @@ module ActiveRecord
         #
         # @param results [Hash] Metrics results containing :total_queries and :crud_operations_by_table
         def log_db_metrics(results)
-          Rails.logger.info "--- DB Metrics for Request ---"
+          Rails.logger.info '--- DB Metrics for Request ---'
           Rails.logger.info "Total DB Queries: #{results[:total_queries]}"
 
           # Show breakdown by table
           results[:crud_operations_by_table].each do |table, counts|
             operations = %i[INSERT SELECT UPDATE DELETE].map do |op|
               "#{op.to_s[0]}:#{counts[op]}"
-            end.join(", ")
+            end.join(', ')
             total = counts.values.sum
             Rails.logger.info "  [#{table.upcase}] #{operations} (Total: #{total})"
           end
 
-          Rails.logger.info "------------------------------"
+          Rails.logger.info '------------------------------'
         end
       end
     end
