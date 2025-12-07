@@ -58,10 +58,18 @@ module ActiveRecord
         end
 
         # Extract actual row count from payload
-        # Rails 7.2+ provides payload[:row_count] for all queries
-        # See: https://github.com/rails/rails/pull/50887
-        def extract_row_count(payload, _operation)
-          payload[:row_count] || 0
+        # Rails 7.2+ provides:
+        # - payload[:row_count] for SELECT (number of rows returned)
+        # - payload[:affected_rows] for INSERT/UPDATE/DELETE (number of rows affected)
+        def extract_row_count(payload, operation)
+          case operation
+          when 'SELECT'
+            payload[:row_count] || 0
+          when 'INSERT', 'UPDATE', 'DELETE'
+            payload[:affected_rows] || 0
+          else
+            0
+          end
         end
 
         # Extract table name from SQL as fallback when payload[:table_name] is unavailable

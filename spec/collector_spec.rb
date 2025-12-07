@@ -71,5 +71,68 @@ RSpec.describe ActiveRecord::Db::Metrics::Collector do
       results = collector.results
       expect(results[:total_queries]).to eq(0)
     end
+
+    it 'tracks INSERT queries using affected_rows' do
+      payload = {
+        sql: 'INSERT INTO users (name) VALUES ("test")',
+        name: 'User Create',
+        table_name: 'users',
+        row_count: 0,
+        affected_rows: 1
+      }
+
+      ActiveSupport::Notifications.instrument('sql.active_record', payload)
+
+      results = collector.results
+      expect(results[:total_queries]).to eq(1)
+      expect(results[:crud_operations_by_table][:users][:INSERT]).to eq(1)
+    end
+
+    it 'tracks UPDATE queries using affected_rows' do
+      payload = {
+        sql: 'UPDATE users SET name = "updated" WHERE id = 1',
+        name: 'User Update',
+        table_name: 'users',
+        row_count: 0,
+        affected_rows: 3
+      }
+
+      ActiveSupport::Notifications.instrument('sql.active_record', payload)
+
+      results = collector.results
+      expect(results[:total_queries]).to eq(1)
+      expect(results[:crud_operations_by_table][:users][:UPDATE]).to eq(3)
+    end
+
+    it 'tracks DELETE queries using affected_rows' do
+      payload = {
+        sql: 'DELETE FROM users WHERE id = 1',
+        name: 'User Destroy',
+        table_name: 'users',
+        row_count: 0,
+        affected_rows: 1
+      }
+
+      ActiveSupport::Notifications.instrument('sql.active_record', payload)
+
+      results = collector.results
+      expect(results[:total_queries]).to eq(1)
+      expect(results[:crud_operations_by_table][:users][:DELETE]).to eq(1)
+    end
+
+    it 'tracks bulk INSERT using affected_rows' do
+      payload = {
+        sql: 'INSERT INTO users (name) VALUES ("user1"), ("user2"), ("user3")',
+        name: 'User Create Many',
+        table_name: 'users',
+        row_count: 0,
+        affected_rows: 3
+      }
+
+      ActiveSupport::Notifications.instrument('sql.active_record', payload)
+
+      results = collector.results
+      expect(results[:crud_operations_by_table][:users][:INSERT]).to eq(3)
+    end
   end
 end
