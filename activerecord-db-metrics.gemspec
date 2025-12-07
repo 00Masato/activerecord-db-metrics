@@ -5,8 +5,8 @@ require_relative 'lib/activerecord/db/metrics/version'
 Gem::Specification.new do |spec|
   spec.name = 'activerecord-db-metrics'
   spec.version = ActiveRecord::Db::Metrics::VERSION
-  spec.authors = ['Your Name']
-  spec.email = ['your.email@example.com']
+  spec.authors = ['Masato Kato']
+  spec.email = ['masatokato0000@gmail.com']
 
   spec.summary = 'Track and analyze ActiveRecord database operations per request'
   spec.description = 'A lightweight gem to monitor and measure database queries in Rails applications, providing detailed metrics on CRUD operations per table including support for bulk operations like insert_all.'
