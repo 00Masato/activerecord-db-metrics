@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = 'Track and analyze ActiveRecord database operations per request'
   spec.description = 'A lightweight gem to monitor and measure database queries in Rails applications, providing detailed metrics on CRUD operations per table including support for bulk operations like insert_all.'
-  spec.homepage = 'https://github.com/yourusername/activerecord-db-metrics'
+  spec.homepage = 'https://github.com/00Masato/activerecord-db-metrics'
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 3.4.0'
 
