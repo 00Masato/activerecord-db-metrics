@@ -111,22 +111,13 @@ The gem subscribes to `ActiveSupport::Notifications` for SQL events and tracks:
 
 1. **Total query count**: How many SQL queries were executed
 2. **Operations by table**: Breakdown of INSERT, SELECT, UPDATE, DELETE per table
-3. **Accurate row counts**: Uses Rails 7.2+ `payload[:row_count]` to correctly count affected rows in all operations, including bulk operations like `insert_all`
+3. **Accurate row counts**: Uses Rails 7.2+ `payload[:row_count]` for SELECT queries and `payload[:affected_rows]` for INSERT/UPDATE/DELETE operations
 
 ### Bulk Operations
 
-Traditional query counters treat `insert_all` as a single operation:
+This gem correctly counts the actual rows affected in bulk operations:
 
 ```ruby
-# Without activerecord-db-metrics
-User.insert_all([{name: "A"}, {name: "B"}, {name: "C"}])
-# => Counted as INSERT: 1 ❌
-```
-
-This gem correctly counts the actual rows affected:
-
-```ruby
-# With activerecord-db-metrics
 User.insert_all([{name: "A"}, {name: "B"}, {name: "C"}])
 # => Counted as INSERT: 3 ✅
 ```
